@@ -11,7 +11,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
- * 涓�涓崟渚嬫ā寮�
+ * 涓?涓崟渚嬫ā寮?
  * Created by ywj on 15/5/7.
  */
 public class Scene {
@@ -60,7 +60,7 @@ public class Scene {
     public static SimMap map=null;
 
     /**
-     * grids x,y 鏂瑰悜鐨勪釜鏁�
+     * grids x,y 鏂瑰悜鐨勪釜鏁?
      */
     public static final String SCENE_SCALE = "sceneScale";
     public static int grids_x, grids_y;
@@ -76,16 +76,16 @@ public class Scene {
 
     public Hashtable<String, ExtGrid> grids = null;
     public Hashtable<String, ExtRegion> regionPool = new Hashtable<String, ExtRegion>();
-    public Hashtable<String, Hashtable<String, ExtRegion>> timeEventRegionSets = null;//寤虹珛time锛峳egion鐨勫叧绯�
+    public Hashtable<String, Hashtable<String, ExtRegion>> timeEventRegionSets = null;//寤虹珛time锛峳egion鐨勫叧绯?
     public Hashtable<String, ExtRegion> timeGrid2Region = new Hashtable<String,ExtRegion>();
 
     public Hashtable<String, List<MapNode>>region2MapNode = null;
 
     //TODO 璇诲叆鍖哄煙杞Щ姒傜巼鐭╅樀
     // key鏄痶imeFromRegionKey,閲囩敤 time鍜宺egionID鎷兼帴鑰屾垚
-    public Hashtable<String, Hashtable<String, Double>> timeRegionTransProbs = null;//璁板綍鍖哄煙杞Щ姒傜巼鐭╅樀涔嬮棿鐨勫叧绯�
+    public Hashtable<String, Hashtable<String, Double>> timeRegionTransProbs = null;//璁板綍鍖哄煙杞Щ姒傜巼鐭╅樀涔嬮棿鐨勫叧绯?
 
-    /***************end of 鍙傛暟鍖�*******************/
+    /***************end of 鍙傛暟鍖?*******************/
     /**
      * 鍒濆鍖栬幏鍙杇rid锛宺egion锛宺egionset
      */
@@ -108,8 +108,8 @@ public class Scene {
     }
 
     /**
-     * 鍒濆鍖栧尯鍩熻浆绉荤煩闃�
-     * 杈撳叆鏍煎紡涓� event,regionf,hour,regionto, event, all transprob
+     * 鍒濆鍖栧尯鍩熻浆绉荤煩闃?
+     * 杈撳叆鏍煎紡涓? event,regionf,hour,regionto, event, all transprob
      * 0	334	0	48	1	24	0.04166667
      * 0	296	0	57	1	111	0.009009009
      * 1	448	0	255	1	10	0.1
@@ -128,14 +128,14 @@ public class Scene {
         }
         System.out.println("Loading transition prob...");
 
-        //鍒濆鍖栨暟鎹粨鏋�
+        //鍒濆鍖栨暟鎹粨鏋?
         this.timeRegionTransProbs = new Hashtable<String,Hashtable<String,Double>>();
         //璇诲叆鏁版嵁
         while(scanner.hasNextLine())
         {
             String nextLine = scanner.nextLine().trim();
             /**
-             *      * 杈撳叆鏍煎紡涓� event,regionf,hour,regionto, event_num, all transprob
+             *      * 杈撳叆鏍煎紡涓? event,regionf,hour,regionto, event_num, all transprob
              */
             String s[] = nextLine.split("\t");
             int _event = Integer.parseInt(s[0]);
@@ -174,7 +174,7 @@ public class Scene {
     }
 
     /*
-     * 鍒濆鍖栧尯鍩�
+     * 鍒濆鍖栧尯鍩?
      */
     private void initRegions(Settings settings) {
 
@@ -245,7 +245,7 @@ public class Scene {
 
 
     /**
-     * 杞藉叆浜嬩欢瀵瑰簲鐨勫尯鍩熼泦鍚�
+     * 杞藉叆浜嬩欢瀵瑰簲鐨勫尯鍩熼泦鍚?
      */
     private void loadGrid2Region2RegionSet(int event) {
         int filesCount;
@@ -309,11 +309,11 @@ public class Scene {
             
             System.out.println("region size:"+regionTimes.get(i).length);
 
-            for (int j = 0; j < regionTimes.get(i).length; j++) {
-                int _time = regionTimes.get(i).length;
-                String teKey = getTimeEventKey(_time, event);
-                this.timeEventRegionSets.put(teKey, _regions);
-            }
+//            for (int j = 0; j < regionTimes.get(i).length; j++) {
+//                int _time = regionTimes.get(i).length;
+//                String teKey = getTimeEventKey(_time, event);
+////                this.timeEventRegionSets.put(teKey, _regions);
+//            }
 
             System.out.println("fininsh loading cells and region...");
             scanner.close();
@@ -340,7 +340,7 @@ public class Scene {
 
 
     /**
-     * 鑾峰彇浠巘ime event鏋勬垚鐨勭储寮�
+     * 鑾峰彇浠巘ime event鏋勬垚鐨勭储寮?
      *
      * @param time  鏃跺埢
      * @param event 浜嬩欢 0 1
@@ -352,7 +352,7 @@ public class Scene {
 
 
     /**
-     * 鑾峰彇浠庢椂闂� 鏍煎瓙鍒板尯鍩熺殑绱㈠紩
+     * 鑾峰彇浠庢椂闂? 鏍煎瓙鍒板尯鍩熺殑绱㈠紩
      *
      * @param time    鏃堕棿
      * @param gridKey 鏍煎瓙key
