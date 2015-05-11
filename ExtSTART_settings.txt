@@ -41,7 +41,7 @@ Group.event1RegionTimes3 = 21,22,23
 
 
 ##导入区域转移概率矩阵信息
-Group.transProbFile = VTD2011110107_transfer_step8.txt
+Group.transProbFile = data/VTD2011110107_transfer_step8.txt
 
 ##导入地图信息
 #MapBasedMovement.mapFile1 = data/map2009_out.wkt
