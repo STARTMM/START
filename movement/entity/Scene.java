@@ -63,7 +63,7 @@ public class Scene {
     /**
      * grids x,y 方向的个数
      */
-    public static final String SCENE_SCALE = "seneScale";
+    public static final String SCENE_SCALE = "sceneScale";
     public static int grids_x, grids_y;
 
 
@@ -280,7 +280,7 @@ public class Scene {
 
                 String nextLine = scanner.nextLine().trim();
 
-                String s[] = nextLine.split("\t");
+                String s[] = nextLine.split(" ");
                 if (s.length < 4) continue;
                 int x = Integer.parseInt(s[0]);
                 int y = Integer.parseInt(s[1]);
