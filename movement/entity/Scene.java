@@ -77,7 +77,7 @@ public class Scene {
     public Hashtable<String, ExtGrid> grids = null;
     public Hashtable<String, ExtRegion> regionPool = new Hashtable<String, ExtRegion>();
     public Hashtable<String, Hashtable<String, ExtRegion>> timeEventRegionSets = null;//寤虹珛time锛峳egion鐨勫叧绯�
-    public Hashtable<String, ExtRegion> timeGrid2Region = null;
+    public Hashtable<String, ExtRegion> timeGrid2Region = new Hashtable<String,ExtRegion>();
 
     public Hashtable<String, List<MapNode>>region2MapNode = null;
 
