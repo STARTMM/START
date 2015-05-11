@@ -23,7 +23,7 @@ Scenario.nrofHostGroups = 1
 
 # Common settings for all groups
 Group.nrofHosts = 4000
-Group.movementModel = STARTMovement
+Group.movementModel = ExSTARTMovement
 Group.router = EpidemicRouter
 Group.bufferSize = 5M
 Group.waitTime = 0, 10

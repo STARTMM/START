@@ -11,7 +11,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
- * 一个单例模式
+ * 涓�涓崟渚嬫ā寮�
  * Created by ywj on 15/5/7.
  */
 public class Scene {
@@ -26,8 +26,8 @@ public class Scene {
     public static final String EVENT0_REGION_PREFIX = "event0Region";
     public static final String EVENT1_REGION_PREFIX = "event1Region";
 
-    //有多少Event0 region
-    //载入多少Event0 region
+    //鏈夊灏慐vent0 region
+    //杞藉叆澶氬皯Event0 region
     public int nrofEvent0RegionFiles;
     public String[] event0Regions;
 
@@ -35,15 +35,15 @@ public class Scene {
     public String[] event1Regions;
 
 
-    //CVS格式数据
+    //CVS鏍煎紡鏁版嵁
     public static final String EVENT0_REGION_TIMES_PREFIX = "event0RegionTimes";
     public static final String EVENT1_REGION_TIMES_PREFIX = "event1RegionTimes";
 
     public List<int[]> event0RegionTimes;
     public List<int[]> event1RegionTimes;
 
-    //读取区域转移概率矩阵
-    public static final String FILE_TRANS_PROB_S = "transProbFile";//输入文件
+    //璇诲彇鍖哄煙杞Щ姒傜巼鐭╅樀
+    public static final String FILE_TRANS_PROB_S = "transProbFile";//杈撳叆鏂囦欢
 
     public static String transProbFileName;
 
@@ -61,34 +61,34 @@ public class Scene {
     public static SimMap map=null;
 
     /**
-     * grids x,y 方向的个数
+     * grids x,y 鏂瑰悜鐨勪釜鏁�
      */
     public static final String SCENE_SCALE = "sceneScale";
     public static int grids_x, grids_y;
 
 
     /**
-     * grid的x,y长度
+     * grid鐨剎,y闀垮害
      */
     public static final String GRID_SIZE = "gridSize";
     public static int glen_x, glen_y;
-    //获取事件和区域的对应关系
+    //鑾峰彇浜嬩欢鍜屽尯鍩熺殑瀵瑰簲鍏崇郴
 
 
     public Hashtable<String, ExtGrid> grids = null;
     public Hashtable<String, ExtRegion> regionPool = new Hashtable<String, ExtRegion>();
-    public Hashtable<String, Hashtable<String, ExtRegion>> timeEventRegionSets = null;//建立time－region的关系
+    public Hashtable<String, Hashtable<String, ExtRegion>> timeEventRegionSets = null;//寤虹珛time锛峳egion鐨勫叧绯�
     public Hashtable<String, ExtRegion> timeGrid2Region = null;
 
     public Hashtable<String, List<MapNode>>region2MapNode = null;
 
-    //TODO 读入区域转移概率矩阵
-    // key是timeFromRegionKey,采用 time和regionID拼接而成
-    public Hashtable<String, Hashtable<String, Double>> timeRegionTransProbs = null;//记录区域转移概率矩阵之间的关系
+    //TODO 璇诲叆鍖哄煙杞Щ姒傜巼鐭╅樀
+    // key鏄痶imeFromRegionKey,閲囩敤 time鍜宺egionID鎷兼帴鑰屾垚
+    public Hashtable<String, Hashtable<String, Double>> timeRegionTransProbs = null;//璁板綍鍖哄煙杞Щ姒傜巼鐭╅樀涔嬮棿鐨勫叧绯�
 
-    /***************end of 参数区*******************/
+    /***************end of 鍙傛暟鍖�*******************/
     /**
-     * 初始化获取grid，region，regionset
+     * 鍒濆鍖栬幏鍙杇rid锛宺egion锛宺egionset
      */
     private Scene(Settings settings) {
         int [] scale = settings.getCsvInts(SCENE_SCALE);
@@ -98,19 +98,19 @@ public class Scene {
         int []size = settings.getCsvInts(GRID_SIZE);
         glen_x = size[0];
         glen_y = size[1];
-        //TODO 读取设置
+        //TODO 璇诲彇璁剧疆
         initGrid();
 
         initRegions(settings);
 
-        loadTransProb(settings);//读入区域转移概率
+        loadTransProb(settings);//璇诲叆鍖哄煙杞Щ姒傜巼
 
         loadRegion2MapNode();
     }
 
     /**
-     * 初始化区域转移矩阵
-     * 输入格式为 event,regionf,hour,regionto, event, all transprob
+     * 鍒濆鍖栧尯鍩熻浆绉荤煩闃�
+     * 杈撳叆鏍煎紡涓� event,regionf,hour,regionto, event, all transprob
      * 0	334	0	48	1	24	0.04166667
      * 0	296	0	57	1	111	0.009009009
      * 1	448	0	255	1	10	0.1
@@ -129,14 +129,14 @@ public class Scene {
         }
         System.out.println("Loading transition prob...");
 
-        //初始化数据结构
+        //鍒濆鍖栨暟鎹粨鏋�
         this.timeRegionTransProbs = new Hashtable<String,Hashtable<String,Double>>();
-        //读入数据
+        //璇诲叆鏁版嵁
         while(scanner.hasNextLine())
         {
             String nextLine = scanner.nextLine().trim();
             /**
-             *      * 输入格式为 event,regionf,hour,regionto, event_num, all transprob
+             *      * 杈撳叆鏍煎紡涓� event,regionf,hour,regionto, event_num, all transprob
              */
             String s[] = nextLine.split("\t");
             int _event = Integer.parseInt(s[0]);
@@ -161,7 +161,7 @@ public class Scene {
     }
 
     /**
-     * 初始化Grid
+     * 鍒濆鍖朑rid
      */
     private void initGrid() {
         grids = new Hashtable<String, ExtGrid>();
@@ -175,7 +175,7 @@ public class Scene {
     }
 
     /*
-     * 初始化区域
+     * 鍒濆鍖栧尯鍩�
      */
     private void initRegions(Settings settings) {
 
@@ -200,14 +200,16 @@ public class Scene {
             this.event1RegionTimes.add(settings.getCsvInts(EVENT1_REGION_TIMES_PREFIX+i));
         }
 
-        loadGrid2Region2RegionSet(0);
+        System.out.println(this.event0Regions.length);
+        System.out.println(this.event1RegionTimes.size());
+        loadGrid2Region2RegionSet(0);//error
         loadGrid2Region2RegionSet(1);
 
     }
 
 
     /**
-     * 对应区域id和mapnode
+     * 瀵瑰簲鍖哄煙id鍜宮apnode
      */
     private void loadRegion2MapNode() {
         this.region2MapNode = new Hashtable<String , List<MapNode>>();
@@ -244,7 +246,7 @@ public class Scene {
 
 
     /**
-     * 载入事件对应的区域集合
+     * 杞藉叆浜嬩欢瀵瑰簲鐨勫尯鍩熼泦鍚�
      */
     private void loadGrid2Region2RegionSet(int event) {
         int filesCount;
@@ -295,8 +297,9 @@ public class Scene {
                 _regions.put(ExtRegion.getRegionKey(region_id, event), region);
 
                 /**
-                 * 建立反向索引
+                 * 寤虹珛鍙嶅悜绱㈠紩
                  * from time,grid to region
+                 * error
                  */
                 for (int j = 0; j < (timeList.get(i)).size(); j++) {
                     String tgKey = getTimeEventGridKey(timeList.get(i).get(j), event, gridKey);
@@ -304,6 +307,8 @@ public class Scene {
                 }
 
             }
+            
+            System.out.println("region size:"+regionTimes.get(i).length);
 
             for (int j = 0; j < regionTimes.get(i).length; j++) {
                 int _time = regionTimes.get(i).length;
@@ -319,7 +324,7 @@ public class Scene {
     }
 
     /**
-     * 从Region池中获取到region
+     * 浠嶳egion姹犱腑鑾峰彇鍒皉egion
      *
      * @param region_id
      * @param event
@@ -336,11 +341,11 @@ public class Scene {
 
 
     /**
-     * 获取从time event构成的索引
+     * 鑾峰彇浠巘ime event鏋勬垚鐨勭储寮�
      *
-     * @param time  时刻
-     * @param event 事件 0 1
-     * @return 索引
+     * @param time  鏃跺埢
+     * @param event 浜嬩欢 0 1
+     * @return 绱㈠紩
      */
     public static String getTimeEventKey(int time, int event) {
         return time + "-" + event;
@@ -348,11 +353,11 @@ public class Scene {
 
 
     /**
-     * 获取从时间 格子到区域的索引
+     * 鑾峰彇浠庢椂闂� 鏍煎瓙鍒板尯鍩熺殑绱㈠紩
      *
-     * @param time    时间
-     * @param gridKey 格子key
-     * @return 索引
+     * @param time    鏃堕棿
+     * @param gridKey 鏍煎瓙key
+     * @return 绱㈠紩
      */
     public static String getTimeEventGridKey(int time, int event, String gridKey) {
         return time + "-" + event + "-" + gridKey;
@@ -364,9 +369,9 @@ public class Scene {
     }
 
     /**
-     * 从coord找到region
+     * 浠巆oord鎵惧埌region
      * @param coord
-     * @return ExtGrid的id
+     * @return ExtGrid鐨刬d
      */
     public String fromCoordToGrid(Coord coord)
     {
