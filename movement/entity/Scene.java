@@ -57,7 +57,6 @@ public class Scene {
         return ourInstance;
     }
 
-    public static List<List<Integer>> timeList = new ArrayList<List<Integer>>();
     public static SimMap map=null;
 
     /**
@@ -298,8 +297,8 @@ public class Scene {
                  * 建立反向索引
                  * from time,grid to region
                  */
-                for (int j = 0; j < (timeList.get(i)).size(); j++) {
-                    String tgKey = getTimeEventGridKey(timeList.get(i).get(j), event, gridKey);
+                for (int j = 0; j < (regionTimes.get(i)).length; j++) {
+                    String tgKey = getTimeEventGridKey(regionTimes.get(i)[j], event, gridKey);
                     this.timeGrid2Region.put(tgKey, region);
                 }
 
