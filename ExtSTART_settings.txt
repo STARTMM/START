@@ -1,7 +1,7 @@
 ﻿##场景名称
 Scenario.name = beginTime%%Group.beginTime%%_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_simTimes%%Scenario.endTime%%
 ##场景开始时刻,  beginTime=0 lost
-Group.beginTime = 6
+Group.beginTime = 11
 
 Group.sceneScale = 120,120
 Group.gridSize = 200,200
