@@ -107,13 +107,13 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
         MapNode bknode = source;
         for (MapNode node : nodePath) { // create a Path from the shortest path
             dis+=distance(bknode.getLocation(),node.getLocation());//计算实际距离
-            bknode = node;
-            System.out.println("**"+dis);
+//            bknode = node;
+//            System.out.println("**"+dis);
             p.addWaypoint(node.getLocation());
         }
 
         double minSpeed = dis/3600;//最多跑一个小时
-        System.out.println("最小速度:"+minSpeed);
+//        System.out.println("最小速度:"+minSpeed);
 
         //在此处设置速度
         double generateSpeed = speedManager.generateSpeed(this.status);

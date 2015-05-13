@@ -88,23 +88,25 @@ MapBasedMovement.mapFile1 = data/map2009_out.wkt
 
 ## Reports - all report names have to be valid report classes
 
-Report.nrofReports = 8
+Report.nrofReports = 3
 # length of the warm up period (simulated seconds)
 Report.warmup = 0
 
 # default directory of reports (can be overridden per Report with output setting)
 Report.reportDir = reports/
-# Report classes to load
+
 Report.report1 = ContactTimesReport
-#Report.report1 = MessageStatsReport
 Report.report2 = InterContactTimesReport
-Report.report3 = MovementReport
-Report.report4 = AdjacencyGraphvizReport
+Report.report3 = TotalContactTimeReport
+# Report classes to load
+#Report.report1 = MessageStatsReport
+#Report.report3 = MovementReport
+#Report.report4 = AdjacencyGraphvizReport
 Report.report5 = TotalContactTimeReport
 #Report.report1 = MessageStatsReport
 Report.report6 = TotalEncountersReport
-Report.report7 = UniqueEncountersReport
-Report.report8 = EncountersVSUniqueEncountersReport
+#Report.report7 = UniqueEncountersReport
+#Report.report8 = EncountersVSUniqueEncountersReport
 
 
 

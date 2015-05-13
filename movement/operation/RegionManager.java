@@ -69,7 +69,6 @@ public class RegionManager {
                 prob -= toRegionProbs.get(key);
             }
             else{
-            	System.out.println("Succeed get destination region!");
                 return key;
             }
         }
