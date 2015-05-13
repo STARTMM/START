@@ -160,14 +160,17 @@ public class Scene {
             
             System.out.println("Time-event-region Key:"+_timeRegionKey);
             
-            if (!this.timeRegionTransProbs.contains(_timeRegionKey)) {
+            if (!this.timeRegionTransProbs.containsKey(_timeRegionKey)) {
                 this.timeRegionTransProbs.put(_timeRegionKey, new Hashtable<String, Double>());
             }
 
             int _reverse_event = _event==0?1:0;
             String _regionToKey = ExtRegion.getRegionKey(_regionTo_id,_reverse_event);
-
+            
             this.timeRegionTransProbs.get(_timeRegionKey).put(_regionToKey, _tansProb);
+            
+            this.timeRegionTransProbs.get(_timeRegionKey).put(_regionToKey, _tansProb);
+            
         }
         System.out.println("fininsh loading transition prob...");
         scanner.close();
@@ -238,9 +241,9 @@ public class Scene {
             String grid_id = ExtGrid.getKeyForGrid((int)coord.getX(),(int)coord.getY());
             for(ExtRegion _region:this.regionPool.values())
             {
-                if(_region.grids.contains(grid_id))
+                if(_region.grids.containsKey(grid_id))
                 {
-                    if(!this.region2MapNode.contains(_region.region_key))
+                    if(!this.region2MapNode.containsKey(_region.region_key))
                     {
                         this.region2MapNode.put(_region.region_key,new ArrayList<MapNode>());
                     }
@@ -324,12 +327,6 @@ public class Scene {
             
             System.out.println("region size:"+regionTimes.get(i).length);
 
-//            for (int j = 0; j < regionTimes.get(i).length; j++) {
-//                int _time = regionTimes.get(i).length;
-//                String teKey = getTimeEventKey(_time, event);
-////                this.timeEventRegionSets.put(teKey, _regions);
-//            }
-
             System.out.println("fininsh loading cells and region...");
             scanner.close();
 
@@ -346,7 +343,7 @@ public class Scene {
      */
     private ExtRegion getRegionFromPool(int region_id, int event) {
         String region_key = ExtRegion.getRegionKey(region_id, event);
-        if (!this.regionPool.contains(region_key)) {
+        if (!this.regionPool.containsKey(region_key)) {
             ExtRegion region = new ExtRegion(region_id, event);
             this.regionPool.put(region_key, region);
         }

@@ -5,6 +5,7 @@ import core.Settings;
 import core.SimClock;
 import movement.map.DijkstraPathFinder;
 import movement.map.MapNode;
+import movement.map.PointsOfInterest;
 import movement.operation.RegionManager;
 import movement.operation.SpeedManager;
 
@@ -39,6 +40,7 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
     public static SpeedManager speedManager = null;
 
     private DijkstraPathFinder pathFinder;
+    private PointsOfInterest pois;
 
     public DijkstraPathFinder getPathFinder() {
         return this.pathFinder;
@@ -47,6 +49,9 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
    
     public ExSTARTMovement(Settings settings) {
         super(settings);
+        this.pathFinder = new DijkstraPathFinder(getOkMapNodeTypes());
+		this.pois = new PointsOfInterest(getMap(), getOkMapNodeTypes(),
+				settings, rng);
         if(beginTime==-1)
         {
         	beginTime = settings.getInt(BEGIN_TIME);
