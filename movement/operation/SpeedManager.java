@@ -35,7 +35,10 @@ public class SpeedManager {
 
     public double generateSpeed(int status) {
         //TODO 实现按函数分布生成速度
-        return 0;
+        if(status==0)
+            return generateSpeedForStatus0();
+        else
+            return generateSpeedForStatus1();
     }
 
     protected double generateSpeed(double status)

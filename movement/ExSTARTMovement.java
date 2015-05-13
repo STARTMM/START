@@ -104,18 +104,23 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
 
         double dis=0;
         MapNode source = this.lastMapNode;
+        MapNode bknode = source;
         for (MapNode node : nodePath) { // create a Path from the shortest path
-            dis+=distance(source.getLocation(),node.getLocation());//计算实际距离
+            dis+=distance(bknode.getLocation(),node.getLocation());//计算实际距离
+            bknode = node;
+            System.out.println("**"+dis);
             p.addWaypoint(node.getLocation());
         }
 
         double minSpeed = dis/3600;//最多跑一个小时
+        System.out.println("最小速度:"+minSpeed);
 
         //在此处设置速度
-        this.speed = minSpeed+speedManager.generateSpeed(this.status);
+        double generateSpeed = speedManager.generateSpeed(this.status);
+        this.speed = generateSpeed<minSpeed?minSpeed:generateSpeed;
+
         p.setSpeed(this.speed);
 
-        //记录目的节点的位置
         lastMapNode = to;
         return p;
     }
@@ -129,7 +134,7 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
      * @return
      */
     private static double distance(Coord location, Coord location2) {
-        double x = Math.pow(location.getX()-location2.getY(), 2);
+        double x = Math.pow(location.getX()-location2.getX(), 2);
         double y = Math.pow(location.getY()-location2.getY(), 2);
         return Math.sqrt(x+y);
     }

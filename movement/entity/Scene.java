@@ -238,7 +238,7 @@ public class Scene {
         for(MapNode mapNode:map.getNodes())
         {
             Coord coord = mapNode.getLocation();
-            String grid_id = ExtGrid.getKeyForGrid((int)coord.getX(),(int)coord.getY());
+            String grid_id = ExtGrid.getKeyForGrid((int)coord.getX()/glen_x,(int)coord.getY()/glen_y);
             for(ExtRegion _region:this.regionPool.values())
             {
                 if(_region.grids.containsKey(grid_id))

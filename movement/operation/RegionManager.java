@@ -84,7 +84,7 @@ public class RegionManager {
      * @throws Exception
      */
     public MapNode toMapNode(String toRegionId) throws Exception {
-        if(this.scene.region2MapNode.contains(toRegionId)) {
+        if(this.scene.region2MapNode.containsKey(toRegionId)) {
             List<MapNode> mapNodes = this.scene.region2MapNode.get(toRegionId);
             int index = random.nextInt(mapNodes.size());
             return mapNodes.get(index);
