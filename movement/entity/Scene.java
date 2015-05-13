@@ -43,9 +43,9 @@ public class Scene {
     public List<int[]> event1RegionTimes;
 
     //璇诲彇鍖哄煙杞Щ姒傜巼鐭╅樀
-    public static final String FILE_TRANS_PROB_S = "transProbFile";//杈撳叆鏂囦欢
+    public static final String FILE_TRANS_PROB_S = "transProbFileProfix";//杈撳叆鏂囦欢
 
-    public static String transProbFileName;
+    public static String transProbFileProfix;
 
 
     private static Scene ourInstance = null;
@@ -83,6 +83,7 @@ public class Scene {
 
     //TODO 璇诲叆鍖哄煙杞Щ姒傜巼鐭╅樀
     // key鏄痶imeFromRegionKey,閲囩敤 time鍜宺egionID鎷兼帴鑰屾垚
+    public int timeFlag = -1;
     public Hashtable<String, Hashtable<String, Double>> timeRegionTransProbs = null;//璁板綍鍖哄煙杞Щ姒傜巼鐭╅樀涔嬮棿鐨勫叧绯?
 
     /***************end of 鍙傛暟鍖?*******************/
@@ -102,23 +103,30 @@ public class Scene {
 
         initRegions(settings);
 
-        loadTransProb(settings);//璇诲叆鍖哄煙杞Щ姒傜巼
+//        loadTransProb(settings, beginTime);//璇诲叆鍖哄煙杞Щ姒傜巼
 
-        loadRegion2MapNode();
+//        loadRegion2MapNode();//需要map赋值之后再load
+        
     }
 
     /**
+     * change to every time only load one hour transition prob
      * 鍒濆鍖栧尯鍩熻浆绉荤煩闃?
-     * 杈撳叆鏍煎紡涓? event,regionf,hour,regionto, event, all transprob
-     * 0	334	0	48	1	24	0.04166667
-     * 0	296	0	57	1	111	0.009009009
-     * 1	448	0	255	1	10	0.1
+     * 杈撳叆鏍煎紡涓? event,regionf,hour,regionto, all transprob
+     * 0	334		48	1	0.04166667
+     * 0	296		57	1	111	0.009009009
+     * 1	448		255	1	10	0.1
+     * add a field to mark
      */
-    private void loadTransProb(Settings settings)
+    public void loadTransProb(Settings settings, int time)
     {
-        transProbFileName = settings.getSetting(FILE_TRANS_PROB_S);
+//    	System.out.println("PrintNameSpace");
+//    	System.out.println("this time:"+time);
+    	
+//    	System.out.println("NameSpace:"+settings.getNameSpace());
+        transProbFileProfix = settings.getSetting(FILE_TRANS_PROB_S);
 
-        File inFile = new File(transProbFileName);
+        File inFile = new File(transProbFileProfix+time+".txt");
         Scanner scanner;
         try {
             scanner = new Scanner(inFile);
@@ -126,7 +134,7 @@ public class Scene {
             throw new SettingsError("Couldn't find transprob movement input " +
                     "file " + inFile);
         }
-        System.out.println("Loading transition prob...");
+        System.out.println("2Loading transition prob...");
 
         //鍒濆鍖栨暟鎹粨鏋?
         this.timeRegionTransProbs = new Hashtable<String,Hashtable<String,Double>>();
@@ -138,14 +146,20 @@ public class Scene {
              *      * 杈撳叆鏍煎紡涓? event,regionf,hour,regionto, event_num, all transprob
              */
             String s[] = nextLine.split("\t");
+            
+//            System.out.println(nextLine);
+            
             int _event = Integer.parseInt(s[0]);
             int _regionFrom_id = Integer.parseInt(s[1]);
-            int _time = Integer.parseInt(s[2]);
-            int _regionTo_id = Integer.parseInt(s[3]);
-            double _tansProb = Double.parseDouble(s[6]);
+            int _time = Integer.parseInt(s[3]);
+            int _regionTo_id = Integer.parseInt(s[2]);
+            double _tansProb = Double.parseDouble(s[4]);
 
             String regionKey = ExtRegion.getRegionKey(_regionFrom_id, _event);
             String _timeRegionKey = getTimeFromRegionKey(_time, regionKey);
+            
+            System.out.println("Time-event-region Key:"+_timeRegionKey);
+            
             if (!this.timeRegionTransProbs.contains(_timeRegionKey)) {
                 this.timeRegionTransProbs.put(_timeRegionKey, new Hashtable<String, Double>());
             }
@@ -160,7 +174,8 @@ public class Scene {
     }
 
     /**
-     * 鍒濆鍖朑rid
+     * init all the grids
+     * grids belongs to ExGrid.
      */
     private void initGrid() {
         grids = new Hashtable<String, ExtGrid>();
@@ -201,7 +216,7 @@ public class Scene {
 
         System.out.println(this.event0Regions.length);
         System.out.println(this.event1RegionTimes.size());
-        loadGrid2Region2RegionSet(0);//error
+        loadGrid2Region2RegionSet(0);
         loadGrid2Region2RegionSet(1);
 
     }
@@ -210,7 +225,7 @@ public class Scene {
     /**
      * 瀵瑰簲鍖哄煙id鍜宮apnode
      */
-    private void loadRegion2MapNode() {
+    public void loadRegion2MapNode() {
         this.region2MapNode = new Hashtable<String , List<MapNode>>();
 
         System.out.println("** size of Beijing2:" + map.getNodes().size());

@@ -1,7 +1,7 @@
 ﻿##场景名称
 Scenario.name = %%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_range%%btInterface.transmitRange%%
-##场景开始时刻
-Group.beginTime = 0
+##场景开始时刻,  beginTime=0 lost
+Group.beginTime = 1
 
 Group.sceneScale = 120,120
 Group.gridSize = 200,200
@@ -41,7 +41,7 @@ Group.event1RegionTimes3 = 21,22,23
 
 
 ##导入区域转移概率矩阵信息
-Group.transProbFile = data/VTD2011110107_transfer_step8.txt
+Group.transProbFileProfix = data/TransProb/TransProb
 
 ##导入地图信息
 #MapBasedMovement.mapFile1 = data/map2009_out.wkt

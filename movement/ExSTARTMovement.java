@@ -31,7 +31,7 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
      * 引入仿真开始时刻
      */
     private static final String BEGIN_TIME = "beginTime";
-    private int beginTime;
+    private static int beginTime = -1;
 
     /** 其他参数和配置不变   */
 
@@ -44,13 +44,27 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
         return this.pathFinder;
     }
 
-
+   
     public ExSTARTMovement(Settings settings) {
         super(settings);
-
-        this.beginTime = settings.getInt(BEGIN_TIME);
+        if(beginTime==-1)
+        {
+        	beginTime = settings.getInt(BEGIN_TIME);
+        	System.out.println("begin time:"+this.beginTime);
+        }
+        if(_settings == null)
+        {
+        	_settings = settings;
+        	System.out.println(_settings.getNameSpace());
+        }
+        
         if(regionManager==null)
+        {
             regionManager = RegionManager.getInstance(settings);
+
+        	regionManager.scene.map = getMap();
+        	regionManager.scene.loadRegion2MapNode();//在获取了map之后赋值
+        }
         if(speedManager==null)
             speedManager = SpeedManager.getInstance(settings);
     }
@@ -64,6 +78,8 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
         this.status = rng.nextInt(2);
         this.pathFinder = mbm.pathFinder;
     }
+    
+    public static Settings _settings = null;
 
 
     @Override
@@ -94,7 +110,7 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
         this.speed = minSpeed+speedManager.generateSpeed(this.status);
         p.setSpeed(this.speed);
 
-        //纪律目的节点的位置
+        //记录目的节点的位置
         lastMapNode = to;
         return p;
     }
@@ -125,8 +141,18 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
      * @return MapNode 目的地点的地图节点
      */
     public MapNode getNextMapNode() {
+    	
+//    	System.out.println(beginTime);
 
-        int _time = this.beginTime + (int) Math.floor(SimClock.getIntTime() / 3600);
+        int _time = beginTime + (int) Math.floor(SimClock.getIntTime() / 3600);
+//        System.out.println(_time);
+        if(_time>regionManager.scene.timeFlag)
+        {
+        	regionManager.scene.loadTransProb(_settings, _time);
+        	regionManager.scene.timeFlag = _time;
+        }
+        
+        
         return regionManager.fromCoordToNextMapNode(_time, this.status, this.lastMapNode.getLocation());
     }
 

@@ -69,11 +69,12 @@ public class RegionManager {
                 prob -= toRegionProbs.get(key);
             }
             else{
+            	System.out.println("Succeed get destination region!");
                 return key;
             }
         }
 
-        throw new Exception("No region select");
+        throw new Exception("No region select:timeEventFromKey:"+timeEventKey);
     }
 
     /**
@@ -93,9 +94,9 @@ public class RegionManager {
 
     /**
      *
-     * @param time 由当前时刻
-     * @param event 事件值
-     * @param coord 当前位置
+     * @param time 由当前时刻1
+     * @param event 当前事件值0
+     * @param coord 当前位置0-201
      * @return 目的的地图
      */
     public MapNode fromCoordToNextMapNode(int time,int event,Coord coord)
@@ -108,7 +109,8 @@ public class RegionManager {
             return mapNode;
 
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+        	System.out.println(e.getMessage());
             return scene.randomGetMapNode();
         }
     }
