@@ -45,7 +45,6 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
     public DijkstraPathFinder getPathFinder() {
         return this.pathFinder;
     }
-
    
     public ExSTARTMovement(Settings settings) {
         super(settings);
@@ -70,7 +69,6 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
         	regionManager.scene.map = getMap();
         	regionManager.scene.loadRegion2MapNode();//在获取了map之后赋值
         	
-        	System.out.println("Map Size is "+regionManager.scene.map.getNodes().size());
         }
         if(speedManager==null)
             speedManager = SpeedManager.getInstance(settings);

@@ -26,6 +26,9 @@ public class Scene {
     public static final String EVENT0_REGION_PREFIX = "event0Region";
     public static final String EVENT1_REGION_PREFIX = "event1Region";
 
+    public static List<String>mnRegion = new ArrayList<String>();
+    public static List<MapNode>validMapNodes = new ArrayList<MapNode>();
+    
     //鏈夊灏慐vent0 region
     //杞藉叆澶氬皯Event0 region
     public int nrofEvent0RegionFiles;
@@ -143,6 +146,10 @@ public class Scene {
             double _tansProb = Double.parseDouble(s[4]);
 
             String regionKey = ExtRegion.getRegionKey(_regionFrom_id, _event);
+            if(!mnRegion.contains(regionKey))
+            	continue;
+           
+            
             String _timeRegionKey = getTimeFromRegionKey(_time, regionKey);
             
             
@@ -150,14 +157,56 @@ public class Scene {
                 this.timeRegionTransProbs.put(_timeRegionKey, new Hashtable<String, Double>());
             }
 
+            
             int _reverse_event = _event==0?1:0;
             String _regionToKey = ExtRegion.getRegionKey(_regionTo_id,_reverse_event);
             
-            this.timeRegionTransProbs.get(_timeRegionKey).put(_regionToKey, _tansProb);
+            if(mnRegion.contains(_regionToKey))
+            	this.timeRegionTransProbs.get(_timeRegionKey).put(_regionToKey, _tansProb);
 
         }
+        
+        normalizeTransProbs();
+        
         System.out.println("fininsh loading transition prob...");
         scanner.close();
+    }
+    
+    
+    private void normalizeTransProbs()
+    {
+    	System.out.println("normalizing the TransProbs");
+    	
+    	List<String> invalidKeys = new ArrayList<String>();
+    	
+    	for(String key:this.timeRegionTransProbs.keySet())
+    	{
+    		Hashtable<String,Double>toRegionProbs = this.timeRegionTransProbs.get(key);
+    		double sum = 0;
+    		for(double prob:toRegionProbs.values())
+    		{
+    			sum += prob;
+    		}
+    		
+    		if(sum==0)
+    		{
+    			invalidKeys.add(key);
+    		}
+    		else{
+    			for(String subKey:toRegionProbs.keySet())
+        		{
+    				double prob = this.timeRegionTransProbs.get(key).get(subKey)/sum;
+    				
+        			this.timeRegionTransProbs.get(key).put(subKey, prob);
+        		}
+    		}
+    	}
+    	
+    	for(int i=0;i<invalidKeys.size();i++)
+    	{
+    		this.timeRegionTransProbs.remove(invalidKeys.get(i));
+    	}
+    	
     }
 
     /**
@@ -211,25 +260,22 @@ public class Scene {
      * 瀵瑰簲鍖哄煙id鍜宮apnode
      */
     public void loadRegion2MapNode() {
-        this.region2MapNode = new Hashtable<String , List<MapNode>>();
+    	
 
         System.out.println("** size of Beijing2:" + map.getNodes().size());
         System.out.println("LoadRegions to MapNode");
-
+        
+        
+        this.region2MapNode = new Hashtable<String , List<MapNode>>();
+        
 
         for(MapNode mapNode:map.getNodes())
         {
             Coord coord = mapNode.getLocation();
             String grid_id = fromCoordToGrid(coord) ;
-            
-            
+          
             for(ExtRegion _region:this.regionPool.values())
             {
-//            	System.out.println(_region.region_key);
-            	if(_region.region_key=="1-93")
-            	{
-            		System.out.println("Error Analysis!");
-            	}
                 if(_region.grids.containsKey(grid_id))
                 {
                     if(!this.region2MapNode.containsKey(_region.region_key))
@@ -237,17 +283,26 @@ public class Scene {
                         this.region2MapNode.put(_region.region_key,new ArrayList<MapNode>());
                     }
                     this.region2MapNode.get(_region.region_key).add(mapNode);
+                    
+                    if(!mnRegion.contains(_region.region_key))
+                    {
+                    	mnRegion.add(_region.region_key);
+                    }
+                    if(!validMapNodes.contains(mapNode))
+                    {
+                    	validMapNodes.add(mapNode);
+                    }
                 }
             }
         }
-        System.out.println("加载region和MapNode的关系成功");
+        
     }
 
 
     public MapNode randomGetMapNode(){
-        int len = map.getNodes().size();
+        int len = validMapNodes.size();
         Random random = new Random();
-        return map.getNodes().get(random.nextInt(len));
+        return validMapNodes.get(random.nextInt(len));
     }
 
 

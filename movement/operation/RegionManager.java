@@ -61,6 +61,7 @@ public class RegionManager {
 
         String timeEventKey = Scene.getTimeFromRegionKey(time, fromRegion_id);
         Hashtable<String,Double>toRegionProbs = this.scene.timeRegionTransProbs.get(timeEventKey);
+        
 
         for(String key:toRegionProbs.keySet())
         {
@@ -73,6 +74,8 @@ public class RegionManager {
             }
         }
 
+        assert false : "TO region: No region select:timeEventFromKey";
+        
         throw new Exception("No region select:timeEventFromKey:"+timeEventKey);
     }
 
@@ -88,7 +91,9 @@ public class RegionManager {
             int index = random.nextInt(mapNodes.size());
             return mapNodes.get(index);
         }
-        System.out.println(toRegionId+"这个区域没有地图点呢");
+        
+        assert false: "RegionManager:toMapNode:"+toRegionId+"has no mapnode!";
+        
         throw new Exception("WARNING:*RegionManager:toMapNode:"+toRegionId+"has no mapnode!");
     }
 
@@ -110,8 +115,7 @@ public class RegionManager {
 
         } catch (Exception e) {
 //            e.printStackTrace();
-        	//System.out.println(e.getMessage());
-        	System.out.println("fromCoordToNextMapNode**"+e.getMessage());
+        	System.out.println(e.getMessage());
             return scene.randomGetMapNode();
         }
     }
