@@ -55,12 +55,12 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
         if(beginTime==-1)
         {
         	beginTime = settings.getInt(BEGIN_TIME);
-        	System.out.println("begin time:"+this.beginTime);
+        	//System.out.println("begin time:"+this.beginTime);
         }
         if(_settings == null)
         {
         	_settings = settings;
-        	System.out.println(_settings.getNameSpace());
+        	//System.out.println(_settings.getNameSpace());
         }
         
         if(regionManager==null)
@@ -69,6 +69,8 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
 
         	regionManager.scene.map = getMap();
         	regionManager.scene.loadRegion2MapNode();//在获取了map之后赋值
+        	
+        	System.out.println("Map Size is "+regionManager.scene.map.getNodes().size());
         }
         if(speedManager==null)
             speedManager = SpeedManager.getInstance(settings);
@@ -91,7 +93,7 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
     public Path getPath() {
 
         //每次getPath就转换状态
-        reverseStatus();
+        reverseStatus();//change the status
 
         Path p = new Path();
 
@@ -107,13 +109,12 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
         MapNode bknode = source;
         for (MapNode node : nodePath) { // create a Path from the shortest path
             dis+=distance(bknode.getLocation(),node.getLocation());//计算实际距离
-//            bknode = node;
-//            System.out.println("**"+dis);
             p.addWaypoint(node.getLocation());
         }
 
         double minSpeed = dis/3600;//最多跑一个小时
 //        System.out.println("最小速度:"+minSpeed);
+        minSpeed = minSpeed<10?minSpeed:0;
 
         //在此处设置速度
         double generateSpeed = speedManager.generateSpeed(this.status);
@@ -151,11 +152,9 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
      * @return MapNode 目的地点的地图节点
      */
     public MapNode getNextMapNode() {
-    	
-//    	System.out.println(beginTime);
 
         int _time = beginTime + (int) Math.floor(SimClock.getIntTime() / 3600);
-//        System.out.println(_time);
+        
         if(_time>regionManager.scene.timeFlag)
         {
         	regionManager.scene.loadTransProb(_settings, _time);

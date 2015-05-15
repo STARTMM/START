@@ -11,7 +11,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
- * 涓?涓崟渚嬫ā寮?
+ * Singleton
  * Created by ywj on 15/5/7.
  */
 public class Scene {
@@ -67,11 +67,11 @@ public class Scene {
 
 
     /**
-     * grid鐨剎,y闀垮害
+     * grid length x y 
      */
     public static final String GRID_SIZE = "gridSize";
     public static int glen_x, glen_y;
-    //鑾峰彇浜嬩欢鍜屽尯鍩熺殑瀵瑰簲鍏崇郴
+   
 
 
     public Hashtable<String, ExtGrid> grids = null;
@@ -86,10 +86,7 @@ public class Scene {
     public int timeFlag = -1;
     public Hashtable<String, Hashtable<String, Double>> timeRegionTransProbs = null;//璁板綍鍖哄煙杞Щ姒傜巼鐭╅樀涔嬮棿鐨勫叧绯?
 
-    /***************end of 鍙傛暟鍖?*******************/
-    /**
-     * 鍒濆鍖栬幏鍙杇rid锛宺egion锛宺egionset
-     */
+  
     private Scene(Settings settings) {
         int [] scale = settings.getCsvInts(SCENE_SCALE);
         grids_x = scale[0];
@@ -98,14 +95,10 @@ public class Scene {
         int []size = settings.getCsvInts(GRID_SIZE);
         glen_x = size[0];
         glen_y = size[1];
-        //TODO 璇诲彇璁剧疆
+        
         initGrid();
-
         initRegions(settings);
 
-//        loadTransProb(settings, beginTime);//璇诲叆鍖哄煙杞Щ姒傜巼
-
-//        loadRegion2MapNode();//需要map赋值之后再load
         
     }
 
@@ -120,12 +113,9 @@ public class Scene {
      */
     public void loadTransProb(Settings settings, int time)
     {
-//    	System.out.println("PrintNameSpace");
-//    	System.out.println("this time:"+time);
-    	
-//    	System.out.println("NameSpace:"+settings.getNameSpace());
         transProbFileProfix = settings.getSetting(FILE_TRANS_PROB_S);
 
+        System.out.println("**Loading transition prob...");
         File inFile = new File(transProbFileProfix+time+".txt");
         Scanner scanner;
         try {
@@ -134,20 +124,17 @@ public class Scene {
             throw new SettingsError("Couldn't find transprob movement input " +
                     "file " + inFile);
         }
-        System.out.println("2Loading transition prob...");
-
-        //鍒濆鍖栨暟鎹粨鏋?
+        
         this.timeRegionTransProbs = new Hashtable<String,Hashtable<String,Double>>();
-        //璇诲叆鏁版嵁
+        
         while(scanner.hasNextLine())
         {
             String nextLine = scanner.nextLine().trim();
             /**
-             *      * 杈撳叆鏍煎紡涓? event,regionf,hour,regionto, event_num, all transprob
+             *    event,regionf,hour,regionto, event_num, all transprob
              */
             String s[] = nextLine.split("\t");
             
-//            System.out.println(nextLine);
             
             int _event = Integer.parseInt(s[0]);
             int _regionFrom_id = Integer.parseInt(s[1]);
@@ -158,7 +145,6 @@ public class Scene {
             String regionKey = ExtRegion.getRegionKey(_regionFrom_id, _event);
             String _timeRegionKey = getTimeFromRegionKey(_time, regionKey);
             
-            System.out.println("Time-event-region Key:"+_timeRegionKey);
             
             if (!this.timeRegionTransProbs.containsKey(_timeRegionKey)) {
                 this.timeRegionTransProbs.put(_timeRegionKey, new Hashtable<String, Double>());
@@ -168,9 +154,7 @@ public class Scene {
             String _regionToKey = ExtRegion.getRegionKey(_regionTo_id,_reverse_event);
             
             this.timeRegionTransProbs.get(_timeRegionKey).put(_regionToKey, _tansProb);
-            
-            this.timeRegionTransProbs.get(_timeRegionKey).put(_regionToKey, _tansProb);
-            
+
         }
         System.out.println("fininsh loading transition prob...");
         scanner.close();
@@ -217,8 +201,6 @@ public class Scene {
             this.event1RegionTimes.add(settings.getCsvInts(EVENT1_REGION_TIMES_PREFIX+i));
         }
 
-        System.out.println(this.event0Regions.length);
-        System.out.println(this.event1RegionTimes.size());
         loadGrid2Region2RegionSet(0);
         loadGrid2Region2RegionSet(1);
 
@@ -238,9 +220,16 @@ public class Scene {
         for(MapNode mapNode:map.getNodes())
         {
             Coord coord = mapNode.getLocation();
-            String grid_id = ExtGrid.getKeyForGrid((int)coord.getX()/glen_x,(int)coord.getY()/glen_y);
+            String grid_id = fromCoordToGrid(coord) ;
+            
+            
             for(ExtRegion _region:this.regionPool.values())
             {
+//            	System.out.println(_region.region_key);
+            	if(_region.region_key=="1-93")
+            	{
+            		System.out.println("Error Analysis!");
+            	}
                 if(_region.grids.containsKey(grid_id))
                 {
                     if(!this.region2MapNode.containsKey(_region.region_key))
@@ -251,7 +240,7 @@ public class Scene {
                 }
             }
         }
-
+        System.out.println("加载region和MapNode的关系成功");
     }
 
 
@@ -263,7 +252,9 @@ public class Scene {
 
 
     /**
-     * 杞藉叆浜嬩欢瀵瑰簲鐨勫尯鍩熼泦鍚?
+     * loading the x, y region id 
+     * to create the relations between event grid and regions 
+     * @param event: 0 or 1
      */
     private void loadGrid2Region2RegionSet(int event) {
         int filesCount;
@@ -283,7 +274,6 @@ public class Scene {
         //time gain size 1 hour
         for (int i = 0; i < filesCount; i++) {
             File inFile = new File(fileNames[i]);
-            System.out.println("begin loading cells and region [" + fileNames[i] + "]...");
 
             Scanner scanner;
             try {
@@ -293,7 +283,6 @@ public class Scene {
                         "file " + inFile);
             }
 
-            Hashtable<String, ExtRegion> _regions = new Hashtable<String, ExtRegion>();
 
             while (scanner.hasNextLine()) {
 
@@ -305,16 +294,16 @@ public class Scene {
                 int y = Integer.parseInt(s[1]);
 
                 int region_id = Integer.parseInt(s[3]);
+
                 String gridKey = ExtGrid.getKeyForGrid(x, y);
                 ExtGrid grid = this.grids.get(gridKey);
 
-                ExtRegion region = this.getRegionFromPool(region_id, event);
+                ExtRegion region = this.getRegionFromPool(region_id, event);//get a region from the pool by the key
 
-                region.grids.put(gridKey, grid);
-                _regions.put(ExtRegion.getRegionKey(region_id, event), region);
+                region.grids.put(gridKey, grid);//add a grid to the region's grid
 
                 /**
-                 * 寤虹珛鍙嶅悜绱㈠紩
+                 * 
                  * from time,grid to region
                  * error
                  */
@@ -325,9 +314,6 @@ public class Scene {
 
             }
             
-            System.out.println("region size:"+regionTimes.get(i).length);
-
-            System.out.println("fininsh loading cells and region...");
             scanner.close();
 
         }
@@ -335,8 +321,9 @@ public class Scene {
     }
 
     /**
-     * 浠嶳egion姹犱腑鑾峰彇鍒皉egion
-     *
+     * get a region from the pool
+     * if the regionid is not in the region 
+     * new a region for the key
      * @param region_id
      * @param event
      * @return
@@ -351,25 +338,12 @@ public class Scene {
     }
 
 
-    /**
-     * 鑾峰彇浠巘ime event鏋勬垚鐨勭储寮?
-     *
-     * @param time  鏃跺埢
-     * @param event 浜嬩欢 0 1
-     * @return 绱㈠紩
-     */
+    
     public static String getTimeEventKey(int time, int event) {
         return time + "-" + event;
     }
 
 
-    /**
-     * 鑾峰彇浠庢椂闂? 鏍煎瓙鍒板尯鍩熺殑绱㈠紩
-     *
-     * @param time    鏃堕棿
-     * @param gridKey 鏍煎瓙key
-     * @return 绱㈠紩
-     */
     public static String getTimeEventGridKey(int time, int event, String gridKey) {
         return time + "-" + event + "-" + gridKey;
     }
@@ -379,11 +353,7 @@ public class Scene {
         return time + "-" + regionFrom_key;
     }
 
-    /**
-     * 浠巆oord鎵惧埌region
-     * @param coord
-     * @return ExtGrid鐨刬d
-     */
+    
     public String fromCoordToGrid(Coord coord)
     {
         int x = (int) Math.floor(coord.getX()/glen_x);
