@@ -4,6 +4,8 @@
  */
 package core;
 
+import java.util.List;
+
 /**
  * Interface for classes that want to be informed about node movement. 
  */
@@ -25,5 +27,7 @@ public interface MovementListener {
 	 * @param location Coordinates of the location
 	 */
 	public void initialLocation(DTNHost host, Coord location);
+
+	public void newPath(DTNHost host, List<Coord>path, double speed);
 	
 }

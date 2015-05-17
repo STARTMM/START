@@ -379,6 +379,13 @@ public class DTNHost implements Comparable<DTNHost> {
 	private boolean setNextWaypoint() {
 		if (path == null) {
 			path = movement.getPath();
+			if (this.movListeners != null && true)//此处要有判断是否是打印路径的
+			{
+				for (MovementListener l : this.movListeners) {
+					l.newPath(this, this.path.getCoords(), this.path.getSpeed());
+				}
+
+			}
 		}
 
 		if (path == null || !path.hasNext()) {

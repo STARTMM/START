@@ -9,6 +9,8 @@ import core.DTNHost;
 import core.MovementListener;
 import core.Settings;
 
+import java.util.List;
+
 /**
  * Movement report that generates suitable movement data for ns-2 simulator
  * as described in <A HREF="http://www.isi.edu/nsnam/ns/doc/node174.html">
@@ -64,6 +66,11 @@ public class MovementNs2Report extends Report implements MovementListener {
 		write(nodeArray + "("+ index + ") set X_ " + fix(location.getX()));
 		write(nodeArray + "("+ index + ") set Y_ " + fix(location.getY()));
 		write(nodeArray + "("+ index + ") set Z_ 0");
+	}
+
+	@Override
+	public void newPath(DTNHost host, List<Coord> path, double speed) {
+		
 	}
 
 	public void newDestination(DTNHost host, Coord dst, double speed) {
