@@ -1,4 +1,4 @@
-Scenario.name = %%Group.movementModel%%_nodes_%%Group.nrofHosts%%_Speed_%%Group1.speed%%
+Scenario.name = 22%%Group.movementModel%%_nodes_%%Group.nrofHosts%%_Speed_%%Group1.speed%%_%%Scenario.endTime%%
 Scenario.simulateConnections = true
 Scenario.updateInterval = 0.1
 # 43200s == 12h
@@ -11,11 +11,11 @@ Scenario.endTime = 7200
 btInterface.type = SimpleBroadcastInterface
 # Transmit speed of 2 Mbps = 250kBps
 btInterface.transmitSpeed = 250k
-btInterface.transmitRange = 200
+btInterface.transmitRange = 50
 
 highspeedInterface.type = SimpleBroadcastInterface
 highspeedInterface.transmitSpeed = 10M
-highspeedInterface.transmitRange = 200
+highspeedInterface.transmitRange = 50
 
 #################################################################################################
 # Define 6 different node groups
@@ -23,7 +23,7 @@ Scenario.nrofHostGroups = 1
 
 
 # Common settings for all groups
-Group.nrofHosts = 1000
+Group.nrofHosts = 3000
 Group.movementModel = RandomWaypoint
 Group.router = EpidemicRouter
 Group.bufferSize = 5M
@@ -32,42 +32,37 @@ Group.waitTime = 0, 10
 Group.nrofInterfaces = 1
 Group.interface1 = btInterface
 # Walking speeds
-Group.speed = 0.0, 16.67
+Group.speed = 0.0,7.54
 # Message TTL of 300 minutes (5 hours)
 Group.msgTtl = 300
 
 # group1 (pedestrians) specific settings
 Group1.groupID = sp
-Group1.speed = [0,16.67;0,22.22;0, 33.33]
+Group1.speed = 0,7.54
 #################################################################################################
 ## Message creation parameters 
 # How many event generators
-Events.nrof = 4000
+Events.nrof = 0
 # Class of the first event generator
 Events1.class = MessageEventGenerator
 # (following settings are specific for the MessageEventGenerator class)
 # Creation interval in seconds (one new message every 25 to 35 seconds)
-Events1.interval = 1,10
+Events1.interval = 1,2
 # Message sizes (500kB - 1MB)
 Events1.size = 50k,100k
 # range of message source/destination addresses
-Events1.hosts = 0,10
+Events1.hosts = 0,3
 #Events1.tohosts = 2,3
 # Message ID prefix
 Events1.prefix = M
 
 # Class of the first event generator
-Events2.class = MessageEventGenerator
 # (following settings are specific for the MessageEventGenerator class)
 # Creation interval in seconds (one new message every 25 to 35 seconds)
-Events2.interval = 1,10
 # Message sizes (500kB - 1MB)
-Events2.size = 500k,1M
 # range of message source/destination addresses
-Events2.hosts = 0,9
 #Events1.tohosts = 2,3
 # Message ID prefix
-Events2.prefix = M
 
 
 
@@ -90,17 +85,18 @@ MapBasedMovement.mapFile1 = data/Map2009_newOrigin.wkt
 ## Reports - all report names have to be valid report classes
 
 # how many reports to load
-Report.nrofReports = 3
+Report.nrofReports = 4
 # length of the warm up period (simulated seconds)
 Report.warmup = 0
 
 # default directory of reports (can be overridden per Report with output setting)
 Report.reportDir = reports/
+#Report.report1 = MovementReport
 # Report classes to load
 Report.report1 = ContactTimesReport
 Report.report2 = InterContactTimesReport
 Report.report3 = TotalContactTimeReport
-
+Report.report4 = MovementReport
 
 ProphetRouter.secondsInTimeUnit = 30
 SprayAndWaitRouter.nrofCopies = 0

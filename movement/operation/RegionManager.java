@@ -50,6 +50,7 @@ public class RegionManager {
     public String fromTimeEventGridToRegion(int time, int event, String gridKey)
     {
         String timeEventGridKey = Scene.getTimeEventGridKey(time, event,gridKey);
+        //Error
         return scene.timeGrid2Region.get(timeEventGridKey).region_key;
     }
 
@@ -60,6 +61,10 @@ public class RegionManager {
         double prob = random.nextDouble();
 
         String timeEventKey = Scene.getTimeFromRegionKey(time, fromRegion_id);
+        if(!this.scene.timeRegionTransProbs.containsKey(timeEventKey))
+        {
+        	System.out.println(timeEventKey);
+        }
         Hashtable<String,Double>toRegionProbs = this.scene.timeRegionTransProbs.get(timeEventKey);
         
 
@@ -74,7 +79,6 @@ public class RegionManager {
             }
         }
 
-        assert false : "TO region: No region select:timeEventFromKey";
         
         throw new Exception("No region select:timeEventFromKey:"+timeEventKey);
     }
@@ -91,8 +95,6 @@ public class RegionManager {
             int index = random.nextInt(mapNodes.size());
             return mapNodes.get(index);
         }
-        
-        assert false: "RegionManager:toMapNode:"+toRegionId+"has no mapnode!";
         
         throw new Exception("WARNING:*RegionManager:toMapNode:"+toRegionId+"has no mapnode!");
     }

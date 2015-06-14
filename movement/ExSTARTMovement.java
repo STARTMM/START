@@ -59,7 +59,7 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
         if(_settings == null)
         {
         	_settings = settings;
-        	//System.out.println(_settings.getNameSpace());
+        	
         }
         
         if(regionManager==null)

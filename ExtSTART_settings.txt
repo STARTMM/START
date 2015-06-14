@@ -1,8 +1,7 @@
 ﻿##场景名称
-Scenario.name = beginTime%%Group.beginTime%%_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_simTimes%%Scenario.endTime%%
+Scenario.name = newMapbeginTime%%Group.beginTime%%_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_simTimes%%Scenario.endTime%%_rng_%%btInterface.transmitRange%%
 ##场景开始时刻,  beginTime=0 lost
 Group.beginTime = 11
-
 Group.sceneScale = 120,120
 Group.gridSize = 200,200
 
@@ -15,24 +14,23 @@ Scenario.endTime = 7200
 MovementModel.worldSize = 24000,24000
 
 ##导入区域信息
+
 Group.nrofEvent0RegionFiles = 4
 Group.event0Region0 = data/regions/20111101-20111107-hour0-8-event0.txt
-Group.event0Region1 = data/regions/20111101-20111107-hour13-20-event0.txt
-Group.event0Region2 = data/regions/20111101-20111107-hour21-23-event0.txt
-Group.event0Region3 = data/regions/20111101-20111107-hour9-12-event0.txt
+Group.event0Region1 = data/regions/20111101-20111107-hour9-12-event0.txt
+Group.event0Region2 = data/regions/20111101-20111107-hour13-20-event0.txt
+Group.event0Region3 = data/regions/20111101-20111107-hour21-23-event0.txt
 
 Group.event0RegionTimes0 = 0,1,2,3,4,5,6,7,8
 Group.event0RegionTimes1 = 9,10,11,12
 Group.event0RegionTimes2 = 13,14,15,16,17,18,19,20
 Group.event0RegionTimes3 = 21,22,23
 
-
 Group.nrofEvent1RegionFiles = 4
 Group.event1Region0 = data/regions/20111101-20111107-hour0-8-event1.txt
-Group.event1Region1 = data/regions/20111101-20111107-hour13-20-event1.txt
-Group.event1Region2 = data/regions/20111101-20111107-hour21-23-event0.txt
-Group.event1Region3 = data/regions/20111101-20111107-hour9-12-event1.txt
-
+Group.event1Region1 = data/regions/20111101-20111107-hour9-12-event1.txt
+Group.event1Region2 = data/regions/20111101-20111107-hour13-20-event1.txt
+Group.event1Region3 = data/regions/20111101-20111107-hour21-23-event1.txt
 
 Group.event1RegionTimes0 = 0,1,2,3,4,5,6,7,8
 Group.event1RegionTimes1 = 9,10,11,12
@@ -47,4 +45,4 @@ Group.transProbFileProfix = data/TransProb/TransProb
 #MapBasedMovement.mapFile1 = data/map2009_out.wkt
 MapBasedMovement.mapFile1 = data/Map2009_newOrigin.wkt
 
-
+Group.gridsFile = data/regions/cell_beijing2.wkt

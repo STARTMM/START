@@ -38,6 +38,7 @@ public class Scene {
     public String[] event1Regions;
 
 
+    public static final String GRID_FILE = "gridsFile";
     //CVS鏍煎紡鏁版嵁
     public static final String EVENT0_REGION_TIMES_PREFIX = "event0RegionTimes";
     public static final String EVENT1_REGION_TIMES_PREFIX = "event1RegionTimes";
@@ -63,7 +64,7 @@ public class Scene {
     public static SimMap map=null;
 
     /**
-     * grids x,y 鏂瑰悜鐨勪釜鏁?
+     * grids x,y
      */
     public static final String SCENE_SCALE = "sceneScale";
     public static int grids_x, grids_y;
@@ -99,7 +100,7 @@ public class Scene {
         glen_x = size[0];
         glen_y = size[1];
         
-        initGrid();
+        initGrid(settings);
         initRegions(settings);
 
         
@@ -108,7 +109,7 @@ public class Scene {
     /**
      * change to every time only load one hour transition prob
      * 鍒濆鍖栧尯鍩熻浆绉荤煩闃?
-     * 杈撳叆鏍煎紡涓? event,regionf,hour,regionto, all transprob
+     * 杈撳叆鏍煎紡涓? event,regionf,regionto, all transprob
      * 0	334		48	1	0.04166667
      * 0	296		57	1	111	0.009009009
      * 1	448		255	1	10	0.1
@@ -141,8 +142,8 @@ public class Scene {
             
             int _event = Integer.parseInt(s[0]);
             int _regionFrom_id = Integer.parseInt(s[1]);
-            int _time = Integer.parseInt(s[3]);
             int _regionTo_id = Integer.parseInt(s[2]);
+            int _time = Integer.parseInt(s[3]);
             double _tansProb = Double.parseDouble(s[4]);
 
             String regionKey = ExtRegion.getRegionKey(_regionFrom_id, _event);
@@ -161,12 +162,13 @@ public class Scene {
             int _reverse_event = _event==0?1:0;
             String _regionToKey = ExtRegion.getRegionKey(_regionTo_id,_reverse_event);
             
-            if(mnRegion.contains(_regionToKey))
+            if(mnRegion.contains(_regionToKey)){
             	this.timeRegionTransProbs.get(_timeRegionKey).put(_regionToKey, _tansProb);
+	    }
 
         }
         
-        normalizeTransProbs();
+        //normalizeTransProbs();
         
         System.out.println("fininsh loading transition prob...");
         scanner.close();
@@ -213,15 +215,29 @@ public class Scene {
      * init all the grids
      * grids belongs to ExGrid.
      */
-    private void initGrid() {
+    private void initGrid(Settings settings) {
+	File inFile = new File(settings.getSetting(GRID_FILE));
         grids = new Hashtable<String, ExtGrid>();
-
-        for (int i = 0; i < grids_x; i++) {
-            for (int j = 0; j < grids_y; j++) {
-                ExtGrid grid = new ExtGrid(i, j);
-                grids.put(grid.grid_id, grid);
+	
+            Scanner scanner;
+            try {
+                scanner = new Scanner(inFile);
+            } catch (FileNotFoundException e) {
+                throw new SettingsError("Couldn't find external movement input " +
+                        "file " + inFile);
             }
-        }
+
+            while (scanner.hasNextLine()) {
+                String nextLine = scanner.nextLine().trim();
+
+                String s[] = nextLine.split(" ");
+                int x = Integer.parseInt(s[0]);
+                int y = Integer.parseInt(s[1]);
+
+                ExtGrid grid = new ExtGrid(x, y);
+                grids.put(grid.grid_id, grid);
+	    }
+
     }
 
     /*
@@ -255,19 +271,18 @@ public class Scene {
 
     }
 
-
     /**
-     * 瀵瑰簲鍖哄煙id鍜宮apnode
+     * load region to map node
      */
     public void loadRegion2MapNode() {
-    	
 
-        System.out.println("** size of Beijing2:" + map.getNodes().size());
         System.out.println("LoadRegions to MapNode");
         
         
         this.region2MapNode = new Hashtable<String , List<MapNode>>();
         
+        int rcount = 0;
+        int count = 0;
 
         for(MapNode mapNode:map.getNodes())
         {
@@ -286,16 +301,21 @@ public class Scene {
                     
                     if(!mnRegion.contains(_region.region_key))
                     {
+                    	rcount ++;
                     	mnRegion.add(_region.region_key);
                     }
                     if(!validMapNodes.contains(mapNode))
                     {
+                    	count++;
                     	validMapNodes.add(mapNode);
                     }
                 }
             }
-        }
-        
+          
+        }        
+        System.out.println("** size of Beijing2:" + map.getNodes().size());
+        System.out.println(rcount);
+        System.out.println(count);
     }
 
 
@@ -346,32 +366,34 @@ public class Scene {
                 String s[] = nextLine.split(" ");
                 if (s.length < 4) continue;
                 int x = Integer.parseInt(s[0]);
-                int y = Integer.parseInt(s[1]);
+                int y = 119-Integer.parseInt(s[1]);
 
                 int region_id = Integer.parseInt(s[3]);
 
-                String gridKey = ExtGrid.getKeyForGrid(x, y);
-                ExtGrid grid = this.grids.get(gridKey);
 
                 ExtRegion region = this.getRegionFromPool(region_id, event);//get a region from the pool by the key
 
-                region.grids.put(gridKey, grid);//add a grid to the region's grid
-
+                String gridKey = ExtGrid.getKeyForGrid(x, y);
                 /**
-                 * 
-                 * from time,grid to region
-                 * error
-                 */
-                for (int j = 0; j < (regionTimes.get(i)).length; j++) {
-                    String tgKey = getTimeEventGridKey(regionTimes.get(i)[j], event, gridKey);
-                    this.timeGrid2Region.put(tgKey, region);
-                }
+				 * 
+				 * from time,grid to region
+				 * 
+				 */
+				if (this.grids.containsKey(gridKey)) {
+					ExtGrid grid = this.grids.get(gridKey);
+					for (int j = 0; j < (regionTimes.get(i)).length; j++) {
+						String tgKey = getTimeEventGridKey(
+								regionTimes.get(i)[j], event, gridKey);
+						this.timeGrid2Region.put(tgKey, region);
+					}
+					region.grids.put(gridKey, grid);// add a grid to the
+													// region's grid
+				}
 
-            }
-            
-            scanner.close();
+			}
 
-        }
+			scanner.close();
+		}
 
     }
 
@@ -413,6 +435,8 @@ public class Scene {
     {
         int x = (int) Math.floor(coord.getX()/glen_x);
         int y = (int) Math.floor(coord.getY()/glen_y);
-        return this.grids.get(ExtGrid.getKeyForGrid(x,y)).grid_id;
+        String key = ExtGrid.getKeyForGrid(x,y);
+
+        return key;
     }
 }

@@ -10,13 +10,12 @@ import java.util.Random;
  */
 public class SpeedManager {
 
-    /**
-     * a=0.11798
-     b=0.0058637
-     */
-    public static double A0 = 0.11798;
-    public static double A1 = 0.0058637;
+    //public static double A0 = 0.11798;
+    //public static double A1 = 0.0058637;
 
+    public static double a= 0.00211644;
+    public static double b= 1.69768;
+    public static double c= 0.646143;
 
     private static SpeedManager ourInstance = null;
     private static Random rng = new Random(SimClock.getIntTime());
@@ -52,7 +51,7 @@ public class SpeedManager {
     }
 
     private double generateSpeedForStatus0() {
-        double seed = rng.nextDouble()*speed_dis_for_status0(44.4);
+        double seed = rng.nextDouble()*speed_dis_for_status0(22.22);
         double sp = reverse_speed_for_status0(seed);
 //		if(sp<0||sp>44.4)
 //			System.out.println(sp);
@@ -63,7 +62,7 @@ public class SpeedManager {
     }
 
     private double generateSpeedForStatus1() {
-        double seed = rng.nextDouble()*speed_dis_for_status1(44.4);
+        double seed = rng.nextDouble()*speed_dis_for_status1(22.22);
         //System.out.println(seed);
         double sp = reverse_speed_for_status1(seed);
 //		if(sp<0||sp>44.4)
@@ -75,12 +74,12 @@ public class SpeedManager {
 
 
     private double speed_dis_for_status0(double x){
-        return 1-1/Math.exp(A0*Math.pow(x, 1.5));
+        return 1-1/Math.exp(-a*Math.pow(x, b)-c);
     }
 
     private double speed_dis_for_status1(double x)
     {
-        return 1-1/Math.exp(A1*Math.pow(x, 2.5));
+        return 1-1/Math.exp(-a*Math.pow(x, b));
     }
 
     private double reverse_speed_for_status0(double result)

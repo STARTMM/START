@@ -54,7 +54,7 @@ public class ShortestPathMapBasedMovement extends MapBasedMovement implements
 	public Path getPath() {
 		Path p = new Path(generateSpeed());
 		MapNode to = pois.selectDestination();
-		System.out.println("SP get path...");
+		
 		List<MapNode> nodePath = pathFinder.getShortestPath(lastMapNode, to);
 		
 		// this assertion should never fire if the map is checked in read phase

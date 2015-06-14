@@ -2,7 +2,9 @@
 *.iml
 reports/
 *.bak
-
+data/*
 *.pdf
+transProb/
+sp_rwp_movement/
 
 default_setting*
